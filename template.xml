@@ -1,0 +1,415 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE packagegui SYSTEM "../schema/packages.dtd">
+<?xml-stylesheet type="text/xsl" href="../xsl/package.xsl"?>
+<packagegui>
+	<copyright>
+<![CDATA[
+/* $Id$ */
+/* ====================================================================================== */
+/*
+	lcdproc.xml
+	part of pfSense (https://www.pfSense.org/)
+	Copyright (C) 2007-2009 Seth Mos <seth.mos@dds.nl>
+	Copyright (C) 2009 Scott Ullrich
+	Copyright (C) 2011 Michele Di Maria
+	Copyright (C) 2015 ESF, LLC
+	All rights reserved.
+*/
+/* ====================================================================================== */
+/*
+	Redistribution and use in source and binary forms, with or without
+	modification, are permitted provided that the following conditions are met:
+
+
+	1. Redistributions of source code must retain the above copyright notice,
+	   this list of conditions and the following disclaimer.
+
+	2. Redistributions in binary form must reproduce the above copyright
+	   notice, this list of conditions and the following disclaimer in the
+	   documentation and/or other materials provided with the distribution.
+
+
+	THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES,
+	INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY
+	AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+	AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY,
+	OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+	SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+	INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+	CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+	ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+	POSSIBILITY OF SUCH DAMAGE.
+*/
+/* ====================================================================================== */
+	]]>
+	</copyright>
+	<title>Services: LCDproc</title>
+	<name>lcdproc</name>
+	<version>1.0.5</version>
+	<savetext>Save</savetext>
+	<include_file>/usr/local/pkg/lcdproc.inc</include_file>
+	<tabs>
+		<tab>
+			<text>Server</text>
+			<url>/pkg_edit.php?xml=lcdproc.xml</url>
+			<active/>
+		</tab>
+		<tab>
+			<text>Screens</text>
+			<url>/pkg_edit.php?xml=lcdproc_screens.xml</url>
+		</tab>
+	</tabs>
+	<menu>
+		<name>LCDproc</name>
+		<tooltiptext>Set LCDproc settings such as display driver and COM port.</tooltiptext>
+		<section>Services</section>
+		<url>/pkg_edit.php?xml=lcdproc.xml</url>
+	</menu>
+	<additional_files_needed>
+		<item>https://packages.pfsense.org/packages/config/lcdproc/lcdproc.inc</item>
+		<prefix>/usr/local/pkg/</prefix>
+	</additional_files_needed>
+	<additional_files_needed>
+		<item>https://packages.pfsense.org/packages/config/lcdproc/lcdproc.priv.inc</item>
+		<prefix>/etc/inc/priv/</prefix>
+	</additional_files_needed>
+	<additional_files_needed>
+		<item>https://packages.pfsense.org/packages/config/lcdproc/lcdproc_screens.xml</item>
+		<prefix>/usr/local/pkg/</prefix>
+	</additional_files_needed>
+	<additional_files_needed>
+		<item>https://packages.pfsense.org/packages/config/lcdproc/lcdproc_client.php</item>
+		<prefix>/usr/local/pkg/</prefix>
+	</additional_files_needed>
+	<additional_files_needed>
+		<item>https://files.pfsense.org/packages/lcdproc/nexcom.so</item>
+		<prefix>/usr/local/lib/lcdproc/</prefix>
+		<chmod>0755</chmod>
+	</additional_files_needed>
+	<additional_files_needed>
+		<item>https://files.pfsense.org/packages/lcdproc/SureElec.so</item>
+		<prefix>/usr/local/lib/lcdproc/</prefix>
+		<chmod>0755</chmod>
+	</additional_files_needed>
+	<additional_files_needed>
+		<item>https://files.pfsense.org/packages/lcdproc/picolcd.so</item>
+		<prefix>/usr/local/lib/lcdproc/</prefix>
+		<chmod>0755</chmod>
+	</additional_files_needed>
+	<additional_files_needed>
+		<item>https://files.pfsense.org/packages/lcdproc/libusb.so.2</item>
+		<prefix>/usr/local/lib/lcdproc/</prefix>
+		<chmod>0755</chmod>
+	</additional_files_needed>
+	<service>
+		<name>lcdproc</name>
+		<rcfile>lcdproc.sh</rcfile>
+		<executable>LCDd</executable>
+		<description>LCD Driver</description>
+	</service>
+	<fields>
+		<field>
+			<fielddescr>Enable LCDproc</fielddescr>
+			<fieldname>enable</fieldname>
+			<type>checkbox</type>
+		</field>
+		<field>
+			<fieldname>comport</fieldname>
+			<fielddescr>COM Port</fielddescr>
+			<description>Set the COM port LCDproc should use.</description>
+			<type>select</type>
+			<options>
+				<option>
+					<value>none</value>
+					<name>none</name>
+				</option>
+				<option>
+					<value>com2</value>
+					<name>Serial COM port 2 (/dev/cua1)</name>
+				</option>
+				<option>
+					<value>ucom1</value>
+					<name>USB COM port 1 (/dev/cuaU0)</name>
+				</option>
+				<option>
+					<value>ucom2</value>
+					<name>USB COM port 2 (/dev/cuaU1)</name>
+				</option>
+				<option>
+					<value>lpt1</value>
+					<name>Parallel port 1 (/dev/lpt0)</name>
+				</option>
+				<option>
+					<value>ugen0.2</value>
+					<name>USB COM port 1 alternate (/dev/ugen0.2)</name>
+				</option>
+				<option>
+					<value>ugen1.2</value>
+					<name>USB COM port 2 alternate (/dev/ugen1.2)</name>
+				</option>
+				<option>
+					<value>ugen2.2</value>
+					<name>USB COM port 3 alternate (/dev/ugen2.2)</name>
+				</option>
+			</options>
+			<default_value>ucom1</default_value>
+		</field>
+		<field>
+			<fieldname>size</fieldname>
+			<fielddescr>Display Size</fielddescr>
+			<description>Set the display size lcdproc should use.</description>
+			<type>select</type>
+			<options>
+				<option>
+					<value>12x1</value>
+					<name>1 rows 12 colums</name>
+				</option>
+				<option>
+					<value>12x2</value>
+					<name>2 rows 12 colums</name>
+				</option>
+				<option>
+					<value>12x4</value>
+					<name>4 rows 12 colums</name>
+				</option>
+				<option>
+					<value>16x1</value>
+					<name>1 row 16 colums</name>
+				</option>
+				<option>
+					<value>16x2</value>
+					<name>2 rows 16 colums</name>
+				</option>
+				<option>
+					<value>16x4</value>
+					<name>4 rows 16 colums</name>
+				</option>
+				<option>
+					<value>20x1</value>
+					<name>1 row 20 colums</name>
+				</option>
+				<option>
+					<value>20x2</value>
+					<name>2 rows 20 colums</name>
+				</option>
+				<option>
+					<value>20x4</value>
+					<name>4 rows 20 colums</name>
+				</option>
+			</options>
+			<default_value>16x2</default_value>
+		</field>
+		<field>
+			<fieldname>driver</fieldname>
+			<fielddescr>Driver</fielddescr>
+			<description>Set the LCD driver LCDproc should use.</description>
+			<type>select</type>
+			<options>
+				<option>
+					<value>nexcom</value>
+					<name>nexcom</name>
+				</option>
+				<option>
+					<value>bayrad</value>
+					<name>bayrad</name>
+				</option>
+				<option>
+					<value>CFontz</value>
+					<name>CrystalFontz</name>
+				</option>
+				<option>
+					<value>CFontz633</value>
+					<name>CrystalFontz 633</name>
+				</option>
+				<option>
+					<value>CFontzPacket</value>
+					<name>CrystalFontz Packet</name>
+				</option>
+				<option>
+					<value>curses</value>
+					<name>curses</name>
+				</option>
+				<option>
+					<value>CwLnx</value>
+					<name>CwLnx</name>
+				</option>
+				<option>
+					<value>ea65</value>
+					<name>ea65</name>
+				</option>
+				<option>
+					<value>EyeBoxOne</value>
+					<name>EyeBoxOne</name>
+				</option>
+				<option>
+					<value>gl5</value>
+					<name>gl5</name>
+				</option>
+				<option>
+					<value>glcdlib</value>
+					<name>glcdlib</name>
+				</option>
+				<option>
+					<value>glk</value>
+					<name>glk</name>
+				</option>
+				<option>
+					<value>hd44780</value>
+					<name>hd44780</name>
+				</option>
+				<option>
+					<value>icp_a106</value>
+					<name>icp_a106</name>
+				</option>
+				<option>
+					<value>imon</value>
+					<name>imon</name>
+				</option>
+				<option>
+					<value>IOWarrior</value>
+					<name>IOWarrior</name>
+				</option>
+				<option>
+					<value>irman</value>
+					<name>irman</name>
+				</option>
+				<option>
+					<value>joy</value>
+					<name>joy</name>
+				</option>
+				<option>
+					<value>lb216</value>
+					<name>lb216</name>
+				</option>
+				<option>
+					<value>lcdm001</value>
+					<name>lcdm001</name>
+				</option>
+				<option>
+					<value>lcterm</value>
+					<name>lcterm</name>
+				</option>
+				<option>
+					<value>lirc</value>
+					<name>lirc</name>
+				</option>
+				<option>
+					<value>MD8800</value>
+					<name>MD8800</name>
+				</option>
+				<option>
+					<value>ms6931</value>
+					<name>ms6931</name>
+				</option>
+				<option>
+					<value>mtc_s16209x</value>
+					<name>mtc_s16209x</name>
+				</option>
+				<option>
+					<value>MtxOrb</value>
+					<name>MtxOrb</name>
+				</option>
+				<option>
+					<value>NoritakeVFD</value>
+					<name>NoritakeVFD</name>
+				</option>
+				<option>
+					<value>pyramid</value>
+					<name>pyramid</name>
+				</option>
+				<option>
+					<value>picolcd</value>
+					<name>picolcd</name>
+				</option>
+				<option>
+					<value>Sed1330</value>
+					<name>Sed1330</name>
+				</option>
+				<option>
+					<value>sed1520</value>
+					<name>sed1520</name>
+				</option>
+				<option>
+					<value>serialpos</value>
+					<name>serialpos</name>
+				</option>
+				<option>
+					<value>serialVFD</value>
+					<name>serialVFD</name>
+				</option>
+				<option>
+					<value>sli</value>
+					<name>sli</name>
+				</option>
+				<option>
+					<value>stv5730</value>
+					<name>stv5730</name>
+				</option>
+				<option>
+					<value>SureElec</value>
+					<name>SureElec</name>
+				</option>
+				<option>
+					<value>svga</value>
+					<name>svga</name>
+				</option>
+				<option>
+					<value>t6963</value>
+					<name>t6963</name>
+				</option>
+				<option>
+					<value>text</value>
+					<name>text</name>
+				</option>
+				<option>
+					<value>tyan</value>
+					<name>tyan</name>
+				</option>
+				<option>
+					<value>ula200</value>
+					<name>ula200</name>
+				</option>
+				<option>
+					<value>xosd</value>
+					<name>xosd</name>
+				</option>
+			</options>
+			<default_value>pyramid</default_value>
+		</field>
+		<field>
+			<fieldname>refresh_frequency</fieldname>
+			<fielddescr>Refresh frequency</fielddescr>
+			<description>Set the refresh frequency of the information on the LCD Panel.</description>
+			<type>select</type>
+			<options>
+				<option>
+					<value>1</value>
+					<name>1 second</name>
+				</option>
+				<option>
+					<value>2</value>
+					<name>2 seconds</name>
+				</option>
+				<option>
+					<value>3</value>
+					<name>3 seconds</name>
+				</option>
+				<option>
+					<value>5</value>
+					<name>5 seconds</name>
+				</option>
+				<option>
+					<value>10</value>
+					<name>10 seconds</name>
+				</option>
+			</options>
+			<default_value>5</default_value>
+		</field>
+	</fields>
+	<custom_php_validation_command>
+		validate_form_lcdproc($_POST, $input_errors);
+	</custom_php_validation_command>
+	<custom_php_resync_config_command>
+		sync_package_lcdproc();
+	</custom_php_resync_config_command>
+</packagegui>
