@@ -35,14 +35,34 @@
 /* LCDproc */
 define('LCDPROC_RCFILE', '/usr/local/etc/rc.d/lcdproc.sh');
 define('LCDPROC_CLIENT', '/tmp/lcdclient.sh');
-$pfs_version = substr(trim(file_get_contents("/etc/version")), 0, 3);
-if ($pfs_version == "2.1" || $pfs_version == "2.2") {
-	define('LCDPROC_CONFIG', '/usr/pbi/lcdproc-' . php_uname('m') . '/local/etc/LCDd.conf');
-} else {
+
 	define('LCDPROC_CONFIG','/usr/local/etc/LCDd.conf');
-}
+
 define('LCDPROC_HOST','127.0.0.1');
 define('LCDPROC_PORT','13666');
+
+function save_ini_file($file, $array) {
+	global $plugin;
+
+	$res = array();
+	foreach($array as $key => $val) {
+		if(is_array($val)) {
+			$res[] = PHP_EOL."[$key]";
+			foreach($val as $skey => $sval) $res[] = "$skey = ".(is_numeric($sval) ? $sval : '"'.$sval.'"');
+		} else {
+			$res[] = "$key = ".(is_numeric($val) ? $val : '"'.$val.'"');
+		}
+	}
+
+	/* Write changes to tmp file. */
+	file_put_contents($file, implode(PHP_EOL, $res));
+
+	/* Write changes to flash. */
+	$file_path = pathinfo($file);
+	if ($file_path['extension'] == "cfg") {
+		file_put_contents("/boot/config/plugins/".$plugin."/".basename($file), implode(PHP_EOL, $res));
+	}
+}
 
 function lcdproc_notice ($msg) {
 	syslog(LOG_NOTICE, "lcdproc: {$msg}");
@@ -149,11 +169,19 @@ function sync_package_lcdproc() {
 	global $g;
 	global $config;
 	global $input_errors;
-
+	$cfg = parse_ini_file("/boot/config/plugins/lcd/lcd.cfg") ;
+	var_dump($cfg) ;
 	$lcdproc_config = $config['installedpackages']['lcdproc']['config'][0];
 	$lcdproc_screens_config = $config['installedpackages']['lcdprocscreens']['config'][0];
+	$lcdproc_config['driver'] = "CFontzPacket" ;
+	$lcdproc_config['size'] = "20x2" ;
+	
 
-	/* Since config is written before this file invoked, we don't need to read post data */
+
+	$realport = "/dev/serial/by-id/usb-Crystalfontz_Crystalfontz_CFA631-USB_LCD_CF041151-if00-port0";
+
+
+	/* Since config is written before this file invoked, we don't need to read post data 
 	if ($lcdproc_config['enable'] && ($lcdproc_config['comport'] != "none")) {
 		switch ($lcdproc_config['comport']) {
 			case "com2":
@@ -180,10 +208,10 @@ function sync_package_lcdproc() {
 			default:
 				lcdproc_warn("The selected com port is not valid!");
 				return;
-		}
+		} */
 
 		$config_text = "[server]\n";
-		$config_text .= "Driver={$lcdproc_config[driver]}\n";
+		$config_text .= "Driver={$lcdproc_config['driver']}\n";
 		$config_text .= "Bind=127.0.0.1\n";
 		$config_text .= "Port=13666\n";
 		$config_text .= "ReportLevel=3\n";
@@ -192,7 +220,7 @@ function sync_package_lcdproc() {
 		$config_text .= "User=nobody\n";
 		$config_text .= "ServerScreen=no\n";
 		$config_text .= "Foreground=no\n";
-		$config_text .= "DriverPath=/usr/local/lib/lcdproc/\n";
+		$config_text .= "DriverPath=/lib/lcdproc/\n";
 		$config_text .= "GoodBye=\"Thanks for using\"\n";
 		$config_text .= "GoodBye=\"    {$g['product_name']}     \"\n";
 		/* FIXME: Specific to the pyramid project */
@@ -209,10 +237,10 @@ function sync_package_lcdproc() {
 		$config_text .= "DownKey=Down\n";
 
 		/* lcdproc default driver definitions */
-		switch ($lcdproc_config[driver]) {
+		switch ($lcdproc_config['driver']) {
 			case "SureElec":
 				$config_text .= "[{$lcdproc_config['driver']}]\n";
-				$config_text .= "driverpath =/usr/local/lib/lcdproc/\n";
+				$config_text .= "driverpath =/lib/lcdproc/\n";
 				$config_text .= "Device={$realport}\n";
 				$config_text .= "Size={$lcdproc_config['size']}\n";
 				$config_text .= "Edition=2\n";
@@ -274,7 +302,7 @@ function sync_package_lcdproc() {
 				$config_text .= "[{$lcdproc_config['driver']}]\n";
 				$config_text .= "Device={$realport}\n";
 				$config_text .= "Model=635\n";
-				$config_text .= "Size={$lcdproc_config['size']}\n";
+				#$config_text .= "Size={$lcdproc_config['size']}\n";
 				$config_text .= "Contrast=350\n";
 				$config_text .= "Brightness=1000\n";
 				$config_text .= "OffBrightness=50\n";
@@ -313,7 +341,7 @@ function sync_package_lcdproc() {
 				break;
 			default:
 				lcdproc_warn("The chosen lcdproc driver is not a valid choice");
-				unset($lcdproc_config[driver]);
+				unset($lcdproc_config['driver']);
 		}
 
 		/* Generate rc file start and stop */
@@ -350,17 +378,17 @@ EOD;
 		$start .= "\t". LCDPROC_CLIENT ." &\n";
 
 		/* Write out the configuration */
-		conf_mount_rw();
-		lcdproc_write_script(LCDPROC_CLIENT, $client_script);
-		lcdproc_write_config(LCDPROC_CONFIG, $config_text);
-		write_rcfile(array(
-				'file' => 'lcdproc.sh',
-				'start' => $start,
-				'stop' => $stop
-				));
-		conf_mount_ro();
+		#conf_mount_rw();
+		#lcdproc_write_script(LCDPROC_CLIENT, $client_script);
+	#	lcdproc_write_config(LCDPROC_CONFIG, $config_text);
+		#write_rcfile(array(
+	#			'file' => 'lcdproc.sh',
+#				'start' => $start,
+#				'stop' => $stop
+#				));
+#		conf_mount_ro();
 
-		/* Or restart lcdproc if settings were changed */
+		/* Or restart lcdproc if settings were changed 
 		if (is_process_running("LCDd") && ($_POST['comport'] != "")) {
 			lcdproc_notice("Restarting service lcdproc");
 			restart_service("lcdproc");
@@ -369,7 +397,7 @@ EOD;
 
 	if ((! $lcdproc_config['driver']) || ($lcdproc_config['comport'] == "none")) {
 		/* No parameters - user does not want lcdproc running */
-		/* Let's stop the service and remove the rc file */
+		/* Let's stop the service and remove the rc file 
 
 		if (file_exists(LCDPROC_RCFILE)) {
 			if (!$lcdproc_config['enable']) {
@@ -383,8 +411,12 @@ EOD;
 			unlink(LCDPROC_CLIENT);
 			unlink(LCDPROC_CONFIG);
 			conf_mount_ro();
-		}
+		} */
+		$ini = explode('/n',$config_text) ;
+		save_ini_file("/tmp/LCDd.conf",$ini) ;
+		file_put_contents('/tmp/LCDd2.conf',$config_text) ;
+		var_dump($stop) ;
 	}
-}
+
 
 ?>
