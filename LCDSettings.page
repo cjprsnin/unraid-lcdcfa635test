@@ -29,10 +29,14 @@ $config_file = "/tmp/$plugin/config/$plugin.cfg";
 $cfg = is_file($config_file) ? @parse_ini_file($config_file, true) : array();
 
 
-
-
-
+$sName = $plugin ;
+#var_dump($cfg) ;
+$cfg = parse_plugin_cfg($sName);
 ?>
+
+
+
+
 
 <script type="text/javascript" src="<?autov('/webGui/javascript/jquery.filetree.js')?>"></script>
 <link type="text/css" rel="stylesheet" href="<?autov('/webGui/styles/jquery.filetree.css')?>" >
@@ -59,24 +63,46 @@ $cfg = is_file($config_file) ? @parse_ini_file($config_file, true) : array();
 
 <div id="title" class="nocontrol">_(LCD Settings)_</div>
 
-<form markdown="1" name="lcd_manager_settings" method="POST" action="/update.htm" target="progressFrame" >
+<span style="float:right;margin-right:10px"><a href="http://apcupsd.org/manual/manual.html" target="_blank" title="_(APC UPS Daemon user manual)_"><i class="fa fa-file-text-o"></i> <u>_(Online Manual)_</u></a></span>
+<form markdown="1" name="lcd_managerset" method="POST" action="/update.php" target="progressFrame">
+<input type="hidden" name="#file" value="<?=$sName?>/<?=$sName?>.cfg">
+<input type="hidden" name="HOST" value="127.0.0.1">
+<input type="hidden" name="PORT" value="13666">
+<input type="hidden" name="SIZE" value="20x2">
+<input type="hidden" name="DASH" value="0">
 
+
+<!--
+<input type="hidden" name="#include" value="/plugins/<?=$sName?>/include/update.apcupsd.php">
+PORT=13666
+HOST="127.0.0.1"
+SIZE="20x2"
+DEV="/dev/serial/by-id/usb-Crystalfontz_Crystalfontz_CFA631-USB_LCD_CF041151-if00-port0"
+DRIVER="CFontzPacket"
+ENABLED=1
+DASH=0
+-->
+_(LCD Running)_:
+: <select name="ENABLED" size="1" >
+  <?=mk_option($cfg["ENABLED"], "disabled", "_(Disabled)_");?>
+  <?=mk_option($cfg["ENABLED"], "enabled", "_(Enabled)_");?>
+  </select>
 
 _(LCD Type(Driver))_:
-: <select name="DASH" size="1" >
-  <?=mk_option($cfg["Config"]["DASH"], "disabled", "_(Disabled)_");?>
-  <?=mk_option($cfg["Config"]["DASH"], "enabled", "_(Enabled)_");?>
+: <select name="DRIVER" size="1" >
+  <?=mk_option($cfg["DRIVER"], "CFontzPacket", "CFontzPacket");?>
+  <?=mk_option($cfg["DRIVER"], "icp_a106", "ICP A106(QNAP)");?>
   </select>
 
-  _(LCD Device Path)_:
-: <select name="HOTPLUG" size="1" >
-  <?=mk_option($cfg["Config"]["HOTPLUG"], "disabled", "_(Disabled)_");?>
-  <?=mk_option($cfg["Config"]["HOTPLUG"], "enabled", "_(Enabled)_");?>
-  </select>
+_(LCD Device Path)_:
+: <input type="text" name="DEV" value="<?=$cfg["DEV"];?>"/>
+ 
 
 
 &nbsp;
-: <input type="submit" name="#apply" value='_(Apply)_'><input type="button" value='_(Done)_' onclick="done()">
+<input type="submit" name="#default" value="_(Default)_">
+: <input type="submit" name="#apply" value="_(Apply)_" disabled><input type="button" value="_(Done)_" onclick="done()">
+
 </form>
 <?endif;?>
 
