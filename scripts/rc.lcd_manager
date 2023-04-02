@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/bash
 
 rc_start() {
 if [ `ps auxw |awk '/LCD[d]/ {print $2}'| wc -l` != 0  ]; then
@@ -10,8 +10,8 @@ if [ `ps auxw |awk '/lcdclient.s[h]/ {print $2}'| wc -l` != 0  ]; then
         sleep 1
 fi
 
-        /usr/local/sbin/LCDd -c /usr/local/etc/LCDd.conf
-        /tmp/lcdclient.sh &
+        LCDd -c /tmp/LCDd2.conf
+        #/tmp/lcdclient.sh &
 }
 
 rc_stop() {
@@ -23,10 +23,11 @@ if [ `ps auxw |awk '/lcdclient.s[h]/ {print $2}'| wc -l` != 0  ]; then
         ps auxw |awk '/lcdclient.s[h]/ {print $2}'|xargs kill
         sleep 1
 fi
+#/usr/bin/killall lcdclient.sh
 
-/usr/bin/killall lcdclient.sh
+}
 
-restart() {
+rc_restart() {
 		rc_stop
 		rc_start
 }
@@ -41,4 +42,4 @@ case $1 in\
         rc_restart
         ;;
     esac
-}
+

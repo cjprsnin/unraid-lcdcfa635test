@@ -1,0 +1,177 @@
+<?xml version='1.0' standalone='yes'?>
+
+<!DOCTYPE PLUGIN [
+<!ENTITY name      "lcd_manager">
+<!ENTITY author    "SimonFair">
+<!ENTITY version   "2023.03.08">
+<!ENTITY launch    "LCDManagerSettings">
+<!ENTITY gitURL    "https://raw.githubusercontent.com/SimonFair/unraid_lcd/master">
+<!ENTITY pluginURL "&gitURL;/lcd_manager.plg">
+<!ENTITY supportURL	"https://forums.unraid.net/topic/136952-plugin-lcd_manager/">
+<!ENTITY packages	"/boot/config/plugins/&name;/packages">
+<!ENTITY plgPATH   "/boot/config/plugins/&name;">
+<!ENTITY md5		"1691a9c700e46c3465d6a7e48981cc57">
+]>
+
+<PLUGIN name="&name;"
+		author="&author;"
+		launch="&launch;"
+		version="&version;"
+		pluginURL="&pluginURL;"
+		support="&supportURL;"
+		icon="fa-usb"
+		min="6.8.0">
+
+<CHANGES>
+##LCD_Manager
+###&version;
+
+  - Fix for addin plugin check for 6.12+
+
+
+
+</CHANGES>
+
+<!--
+dependency files
+-->
+
+<!--
+The 'lcdproc-package' file.
+-->
+<FILE Name="&packages;/lcdproc.txz" Min="6.10" Run="upgradepkg --install-new">
+<URL>&gitURL;/lcdproc.txz</URL>
+</FILE>
+
+<!--
+The 'pre-install' script.
+-->
+<FILE Run="/bin/bash">
+<INLINE>
+
+# Check to see if new install.
+
+if [ ! -d "/boot/config/plugins/&name;" ]
+then
+ mkdir "/boot/config/plugins/&name;"
+fi
+
+</INLINE>
+</FILE>
+
+<!--
+Get the plugin bundle.
+-->
+<FILE Name="&packages;/&name;-&version;.txz" Run="upgradepkg --install-new &packages;/&name;*%&packages;/&name;-&version;.txz">
+<URL>"&gitURL;/&name;-&version;.txz"</URL>
+<MD5>&md5;</MD5>
+</FILE>
+
+<!--
+The 'post-updgrade' script.
+-->
+<FILE Run="/bin/bash">
+<INLINE>
+echo "Removing previous versons now upgrade has completed."
+echo
+# Remove old 'bundle' files.
+rm -f $(ls &packages;/*.txz 2>/dev/null | grep -v '&version;')
+</INLINE>
+</FILE>
+
+<!--
+USB_Manager background start script.
+-->
+<FILE Name="/tmp/start_lcd_manager" Mode="0770">
+<INLINE>
+#!/bin/bash
+# Copy configuration files to tmp file system.
+/usr/local/emhttp/plugins/&name;/scripts/copy_config.sh 2>/dev/null
+
+# Remove the background start script.
+rm -f /tmp/start_lcd_manager 2>/dev/null
+</INLINE>
+</FILE>
+
+<FILE Name="/boot/config/plugins/&name;/&name;.cfg">
+<INLINE>
+<![CDATA[
+]]>
+</INLINE>
+</FILE>
+
+
+<!--
+The 'post-install' script.
+-->
+<FILE Run="/bin/bash">
+<INLINE>
+# Define Functions
+
+#Define Variables
+
+KERNEL_V="$(uname -r)"
+PACKAGE="usbip"
+DL_URL="https://github.com/ich777/unraid-plugins-repo/releases/download/$KERNEL_V"
+
+# Install the plugin bundle.
+# Create plugin directory
+mkdir /boot/config/plugins/&name; 2>/dev/null
+mkdir /usr/local/emhttp/plugins/&name; 2>/dev/null
+mkdir -p /tmp/&name;/config 2>/dev/null
+
+
+# Adjust plugin permissions.
+chmod 755 -R /usr/local/emhttp/plugins/&name; 2>/dev/null
+
+# Fix permissions of executable files
+chmod +x /usr/local/emhttp/plugins/&name;/scripts/* /usr/local/emhttp/plugins/&name;/event/*
+
+# Create a symlink to USB_Manager scripts.
+ln -sf /usr/local/emhttp/plugins/&name;/scripts/rc.lcd_manager /usr/local/sbin
+
+# Copy Config to tmp and load modules.
+at -M -f /tmp/start_lcd_manager now 2>/dev/null
+
+
+echo 
+echo "-----------------------------------------------------------"
+echo " &name; has been installed."
+echo " "
+echo " Copyright 2016-2020, &author;"
+echo " Version: &version;"
+echo ""
+echo "-----------------------------------------------------------"
+echo 
+</INLINE>
+</FILE>
+
+<!--
+The 'remove' script.
+-->
+<FILE Run="/bin/bash" Method="remove">
+<INLINE>
+
+#Define Variables
+
+# Remove installed packages
+find "&packages;/" -type f -iname "*.txz" -delete
+
+rm -f /tmp/plugins/&name;.plg 
+rm -r /tmp/&name;
+
+# Remove all plugin files from emhttp.
+removepkg &packages;/&name;-&version;.txz 
+#removepkg "&packages;/&name;/packages/${KERNEL_V%%-*}/${PACKAGE}-1.txz"
+#depmod -a > /dev/null
+
+echo 
+echo "-----------------------------------------------------------"
+echo " &name; has been uninstalled."
+echo "-----------------------------------------------------------"
+echo 
+
+</INLINE>
+</FILE>
+
+</PLUGIN>

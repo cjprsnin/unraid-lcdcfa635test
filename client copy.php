@@ -31,7 +31,7 @@
 */
 #require_once("config.inc");
 #require_once("functions.inc");
-require_once("include/lib_lcd_manager.php");
+require_once("include/lib.php");
 
 function get_pfstate() {
 	global $config;
@@ -463,10 +463,6 @@ function build_interface($lcd) {
 	$lcd_cmds[] = "widget_add welcome_scr title_wdgt title";
 	$lcd_cmds[] = "widget_add welcome_scr text_wdgt scroller";
 	add_summary_declaration($lcd_cmds, "welcome_scr");
-	$lcdproc_screens_config["scr_time"] = "on" ;
-	$lcdproc_screens_config["scr_uptime"] = "on" ;
-	$lcdproc_screens_config["scr_system"] = "on" ;
-
 
 	/* process screens to display */
 	if (is_array($lcdproc_screens_config)) {
@@ -609,12 +605,9 @@ function loop_status($lcd) {
 		}
 
 		$lcd_cmds = array();
-		$lcd_cmds[] = "widget_set welcome_scr title_wdgt  \"Welcome to\"";
+		$lcd_cmds[] = "widget_set welcome_scr title_wdgt \"Welcome to\"";
 		$lcd_cmds[] = "widget_set welcome_scr text_wdgt 1 2 $lcdpanel_width 2 h 2 \"{$g['product_name']} {$version}\"";
 		add_summary_values($lcd_cmds, "welcome_scr", $lcd_summary_data, $lcdpanel_width);
-		$lcdproc_screens_config["scr_time"] = "on" ;
-		$lcdproc_screens_config["scr_uptime"] = "on" ;
-		$lcdproc_screens_config["scr_system"] = "on" ;
 
 		/* process screens to display */
 		foreach ((array) $lcdproc_screens_config as $name => $screen) {
@@ -639,8 +632,8 @@ function loop_status($lcd) {
 					$lcd_cmds[] = "widget_set $name text_wdgt 1 2 $lcdpanel_width 2 h 2 \"{$hostname}\"";
 					break;
 				case "scr_system":
-					#$processor = cpu_usage();
-					#$memory = mem_usage();
+					$processor = cpu_usage();
+					$memory = mem_usage();
 					$lcd_cmds[] = "widget_set $name title_wdgt 1 1 \"+ System Stats\"";
 					$lcd_cmds[] = "widget_set $name text_wdgt 1 2 $lcdpanel_width 2 h 2 \"CPU {$processor}%, Mem {$memory}%\"";
 					break;
