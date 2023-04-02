@@ -1,6 +1,6 @@
 Menu="OtherSettings"
 Title="LCD Settings"
-Icon="fa-tv"
+Icon="lcd.png"
 ---
 <?php
 /* 
