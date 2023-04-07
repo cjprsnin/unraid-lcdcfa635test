@@ -1,0 +1,33 @@
+#!/usr/bin/bash
+
+rc_start() {
+/usr/bin/killall LCDd
+
+        LCDd -c /boot/config/plugins/lcd_manager/LCDd.conf
+        pgrep LCDd > /var/run/LCDd.pid
+}
+
+rc_stop() {
+        /usr/bin/killall LCDd
+        rm /var/run/LCDd.pid
+        sleep 1
+
+}
+
+rc_restart() {
+		rc_stop
+		rc_start
+}
+
+case $1 in
+    start)
+     rc_start
+    ;;
+    stop)
+        rc_stop
+        ;;
+    restart)
+        rc_restart
+        ;;
+    esac
+

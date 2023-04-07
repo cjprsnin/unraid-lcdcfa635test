@@ -6,6 +6,8 @@
 	Copyright (C) 2009 Scott Ullrich
 	Copyright (C) 2011 Michele Di Maria
 	Copyright (C) 2015 ESF, LLC
+	Copyright (C) 2023 Simon Fairweather Modifications to use with Unraid.
+	
 	All rights reserved.
 
 	Redistribution and use in source and binary forms, with or without
@@ -36,10 +38,21 @@
 define('LCDPROC_RCFILE', '/usr/local/etc/rc.d/lcdproc.sh');
 define('LCDPROC_CLIENT', '/tmp/lcdclient.sh');
 
-	define('LCDPROC_CONFIG','/usr/local/etc/LCDd.conf');
+define('LCDPROC_CONFIG','/usr/local/etc/LCDd.conf');
 
 define('LCDPROC_HOST','127.0.0.1');
 define('LCDPROC_PORT','13666');
+
+function lcd_manager_log($m, $type = "NOTICE") {
+	global $plugin;
+
+	if ($type == "DEBUG" ) return NULL;
+	$m		= print_r($m,true);
+	$m		= str_replace("\n", " ", $m);
+	$m		= str_replace('"', "'", $m);
+	$cmd	= "/usr/bin/logger ".'"'.$m.'"'." -t".$plugin;
+	exec($cmd);
+}
 
 function save_ini_file($file, $array) {
 	global $plugin;
@@ -93,73 +106,6 @@ function lcdproc_write_script($file, $text) {
 	chmod($file, 0755);
 }
 
-function validate_form_lcdproc($post, &$input_errors) {
-	if ($post['comport']) {
-		switch ($post['comport']) {
-			case "none":
-				continue;
-				break;
-			case "com2":
-				continue;
-				break;
-			case "ucom1":
-				continue;
-				break;
-			case "ucom2":
-				continue;
-				break;
-			case "lpt1":
-				continue;
-				break;
-			case "ugen0.2":
-				continue;
-				break;
-			case "ugen1.2":
-				continue;
-				break;
-			case "ugen2.2":
-				continue;
-				break;
-			default:
-				$input_errors[] = "The chosen com port is not valid";
-				break;
-		}
-	}
-	if ($post['size']) {
-		switch ($post['size']) {
-			case "12x1":
-				continue;
-				break;
-			case "12x2":
-				continue;
-				break;
-			case "12x4":
-				continue;
-				break;
-			case "16x1":
-				continue;
-				break;
-			case "16x2":
-				continue;
-				break;
-			case "16x4":
-				continue;
-				break;
-			case "20x1":
-				continue;
-				break;
-			case "20x2":
-				continue;
-				break;
-			case "20x4":
-				continue;
-				break;
-			default:
-				$input_errors[] = "The chosen display size is not valid";
-				break;
-		}
-	}
-}
 
 function sync_package_lcdproc_screens() {
 	sync_package_lcdproc();
@@ -169,46 +115,13 @@ function sync_package_lcdproc() {
 	global $g;
 	global $config;
 	global $input_errors;
-	$cfg = parse_ini_file("/boot/config/plugins/lcd/lcd.cfg") ;
-	var_dump($cfg) ;
+	$cfg = parse_ini_file("/boot/config/plugins/lcd_manager/lcd_manager.cfg") ;
 	$lcdproc_config = $config['installedpackages']['lcdproc']['config'][0];
 	$lcdproc_screens_config = $config['installedpackages']['lcdprocscreens']['config'][0];
-	$lcdproc_config['driver'] = "CFontzPacket" ;
-	$lcdproc_config['size'] = "20x2" ;
-	
+	$lcdproc_config['driver'] = $cfg["DRIVER"];
+	$lcdproc_config['size'] = $cfg["SIZE"] ;
+	$realport = $cfg["DEV"] ;
 
-
-	$realport = "/dev/serial/by-id/usb-Crystalfontz_Crystalfontz_CFA631-USB_LCD_CF041151-if00-port0";
-
-
-	/* Since config is written before this file invoked, we don't need to read post data 
-	if ($lcdproc_config['enable'] && ($lcdproc_config['comport'] != "none")) {
-		switch ($lcdproc_config['comport']) {
-			case "com2":
-				$realport = "/dev/cua1";
-				break;
-			case "ucom1":
-				$realport = "/dev/cuaU0";
-				break;
-			case "ucom2":
-				$realport = "/dev/cuaU1";
-				break;
-			case "lpt1":
-				$realport = "/dev/lpt0";
-				break;
-			case "ugen0.2":
-				$realport = "/dev/ugen0.2";
-				break;
-			case "ugen1.2":
-				$realport = "/dev/ugen1.2";
-				break;
-			case "ugen2.2":
-				$realport = "/dev/ugen2.2";
-				break;
-			default:
-				lcdproc_warn("The selected com port is not valid!");
-				return;
-		} */
 
 		$config_text = "[server]\n";
 		$config_text .= "Driver={$lcdproc_config['driver']}\n";
@@ -339,84 +252,20 @@ function sync_package_lcdproc() {
 				$config_text .= "OffBrightness=0\n";
 				$config_text .= "Brightness=500\n";
 				break;
+			case "icp_a106":
+				$config_text .= "[{$lcdproc_config['driver']}]\n";
+				$config_text .= "Device={$realport}\n";
+				$config_text .= "OffBrightness=0\n";
+				$config_text .= "Brightness=500\n";
+				break;
 			default:
 				lcdproc_warn("The chosen lcdproc driver is not a valid choice");
 				unset($lcdproc_config['driver']);
 		}
 
-		/* Generate rc file start and stop */
-		$client_script = <<<EOD
-#!/bin/sh
 
-# script starts a lcd client and always keeps it active.
-counter=1
-while [ "\$counter" -ne 0 ]
-do
-	# loop the client to drive the display
-	/usr/local/bin/php -f /usr/local/pkg/lcdproc_client.php
-	sleep 1
-done
-
-EOD;
-
-		/* Generate rc file start and stop */
-		$stop = <<<EOD
-
-if [ `ps auxw |awk '/LCD[d]/ {print $2}'| wc -l` != 0  ]; then
-	ps auxw |awk '/LCD[d]/ {print $2}'|xargs kill 
-	sleep 1	
-fi
-if [ `ps auxw |awk '/lcdclient.s[h]/ {print $2}'| wc -l` != 0  ]; then
-	ps auxw |awk '/lcdclient.s[h]/ {print $2}'|xargs kill
-	sleep 1	
-fi
-
-EOD;
-
-		$start = $stop ."\n";
-		$start .= "\t/usr/local/sbin/LCDd -c ". LCDPROC_CONFIG ."\n";
-		$start .= "\t". LCDPROC_CLIENT ." &\n";
-
-		/* Write out the configuration */
-		#conf_mount_rw();
-		#lcdproc_write_script(LCDPROC_CLIENT, $client_script);
-	#	lcdproc_write_config(LCDPROC_CONFIG, $config_text);
-		#write_rcfile(array(
-	#			'file' => 'lcdproc.sh',
-#				'start' => $start,
-#				'stop' => $stop
-#				));
-#		conf_mount_ro();
-
-		/* Or restart lcdproc if settings were changed 
-		if (is_process_running("LCDd") && ($_POST['comport'] != "")) {
-			lcdproc_notice("Restarting service lcdproc");
-			restart_service("lcdproc");
-		}
-	}
-
-	if ((! $lcdproc_config['driver']) || ($lcdproc_config['comport'] == "none")) {
-		/* No parameters - user does not want lcdproc running */
-		/* Let's stop the service and remove the rc file 
-
-		if (file_exists(LCDPROC_RCFILE)) {
-			if (!$lcdproc_config['enable']) {
-				lcdproc_notice('Stopping service: lcdproc disabled');
-			} else {
-				lcdproc_notice('Stopping service: no com port selected');
-			}
-			stop_service("lcdproc");
-			conf_mount_rw();
-			unlink(LCDPROC_RCFILE);
-			unlink(LCDPROC_CLIENT);
-			unlink(LCDPROC_CONFIG);
-			conf_mount_ro();
-		} */
 		$ini = explode('/n',$config_text) ;
-		save_ini_file("/tmp/LCDd.conf",$ini) ;
-		file_put_contents('/tmp/LCDd2.conf',$config_text) ;
-		var_dump($stop) ;
+		file_put_contents('/boot/config/plugins/lcd_manager/LCDd.conf',$config_text) ;
+
 	}
-
-
 ?>

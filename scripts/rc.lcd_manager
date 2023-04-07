@@ -1,45 +1,62 @@
-#!/usr/bin/bash
+#!/usr/bin/php
+<?php
+/* Copyright 2021, Simon Fairweather
+ *
+ * based on original code from Guilherme Jardim and Dan Landon
+ * 
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License version 2,
+ * as published by the Free Software Foundation.
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ */
 
-rc_start() {
-if [ `ps auxw |awk '/LCD[d]/ {print $2}'| wc -l` != 0  ]; then
-        ps auxw |awk '/LCD[d]/ {print $2}'|xargs kill 
-        sleep 1
-fi
-if [ `ps auxw |awk '/lcdclient.s[h]/ {print $2}'| wc -l` != 0  ]; then
-        ps auxw |awk '/lcdclient.s[h]/ {print $2}'|xargs kill
-        sleep 1
-fi
+$plugin = "lcd_manager";
+$docroot = NULL ;
+$docroot = $docroot ?: @$_SERVER['DOCUMENT_ROOT'] ?: '/usr/local/emhttp';
+require_once("$docroot/plugins/{$plugin}/include/lib_lcd_manager.php");
+$cfg = parse_ini_file("/boot/config/plugins/lcd_manager/lcd_manager.cfg") ;
+$pid = file_get_contents("/var/run/LCDd.pid");
+$COMMAND = $argv[1];
 
-        LCDd -c /tmp/LCDd2.conf
-        #/tmp/lcdclient.sh &
+if ($COMMAND != 'spindown') {
+	$DEVNAME = (isset($_ENV['DEVNAME'])) ? $_ENV['DEVNAME'] : ( isset($argv[2]) ? $argv[2] : NULL );
+	$DEVNAME = (file_exists($DEVNAME)) ? realpath($DEVNAME) : $DEVNAME;
+} else {
+	$DEVNAME = $argv[2];
 }
 
-rc_stop() {
-if [ `ps auxw |awk '/LCD[d]/ {print $2}'| wc -l` != 0  ]; then
-        ps auxw |awk '/LCD[d]/ {print $2}'|xargs kill 
-        sleep 1
-fi
-if [ `ps auxw |awk '/lcdclient.s[h]/ {print $2}'| wc -l` != 0  ]; then
-        ps auxw |awk '/lcdclient.s[h]/ {print $2}'|xargs kill
-        sleep 1
-fi
-#/usr/bin/killall lcdclient.sh
+switch ($COMMAND) {
 
+	case 'start_daemon':
+		LCDd_start();
+		break;
+
+	case 'stop_daemon':
+		LCDd_stop();
+		break;
+
+	case 'reload':
+		LCDd_reload();
+		break;
+
+
+	case 'check_config':
+		sync_package_lcdproc();
+
+		if($cfg["ENABLED"] == "enabled") {
+			#echo "Start" ;
+			shell_exec("$docroot/plugins/{$plugin}/scripts/rc.lcd_daemon restart > /dev/null 2>/dev/null") ;
+			#echo "Get PID" ;
+			shell_exec("pgrep LCDd > /var/run/LCDd.pid") ;
+		} else shell_exec("$docroot/plugins/{$plugin}/scripts/rc.lcd_daemon stop > /dev/null 2>/dev/null") ;
+		break;	
+
+	default:
+		lcd_manager_log("Error: rc.lcd_manager {$argv[1]} {$argv[2]} {$argv[3]} {$argv[4]} not understood");
+		lcd_manager_log("rc.lcd_manager usage: 'start_daemon','stop_daemon', 'reload', 'check_config");
+		exit(0);
+		break;
 }
-
-rc_restart() {
-		rc_stop
-		rc_start
-}
-
-case $1 in\
-    start) rc_start
-    ;;
-    stop)
-        rc_stop
-        ;;
-    restart)
-        rc_restart
-        ;;
-    esac
-
+?> 
