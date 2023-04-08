@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Containers>
+<Plugin>True</Plugin>
+<PluginURL>https://raw.githubusercontent.com/SimonFair/unraid-lcd/master/lcd_manager.plg</PluginURL>
+<PluginAuthor>SimonFair</PluginAuthor>
+<Beta>True</Beta>
+<Category>Other: Drivers:</Category>
+<Name>LCD Manager</Name>
+<DonateText>If you wanna buy me a coffee.</DonateText>
+<DonateLink>https://paypal.me/SimonNFairweather?locale.x=en_GB</DonateLink>
+<DonateImage>https://www.paypalobjects.com/webstatic/en_US/btn/btn_donate_74x21.png</DonateImage>
+<Description>
+Install for LCDd and lcdproc to support LCD Screens.
+
+A QNAP lcd device is icp_a106, Futher panels will be added in the future along with unRAID specific screens.
+
+
+</Description>
+<Support>https://forums.unraid.net/topic/136952-plugin-lcd_manager/</Support>
+<Date>2023-04-08</Date>
+<Changes>
+- Initial beta release.
+
+Install for LCDd and lcdproc to support LCD Screens.
+
+A QNAP lcd device is icp_a106, Futher panels will be added in the future along with unRAID specific screens.
+
+</Changes>
+<Icon>https://raw.githubusercontent.com/SimonFair/unraid-lcd/master/images/lcd.png</Icon>
+</Containers>
