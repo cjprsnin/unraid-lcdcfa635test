@@ -46,11 +46,13 @@ switch ($COMMAND) {
 		sync_package_lcdproc();
 
 		if($cfg["ENABLED"] == "enabled") {
-			#echo "Start" ;
 			shell_exec("$docroot/plugins/{$plugin}/scripts/rc.lcd_daemon restart > /dev/null 2>/dev/null") ;
-			#echo "Get PID" ;
-			shell_exec("pgrep LCDd > /var/run/LCDd.pid") ;
 		} else shell_exec("$docroot/plugins/{$plugin}/scripts/rc.lcd_daemon stop > /dev/null 2>/dev/null") ;
+
+		if($cfg["LCDPROC"] == "yes" && $cfg["ENABLED"] == "enabled") {
+			$opts = $cfg['LCDPROCOPTS'] ;
+			shell_exec("$docroot/plugins/{$plugin}/scripts/rc.lcdproc restart '$opts' > /dev/null 2>/dev/null") ;
+		} else shell_exec("$docroot/plugins/{$plugin}/scripts/rc.lcdproc stop > /dev/null 2>/dev/null") ;
 		break;	
 
 	default:

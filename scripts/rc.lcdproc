@@ -1,0 +1,31 @@
+#!/usr/bin/bash
+
+rc_start() {
+        lcdproc $1
+        #pgrep LCDd > /var/run/LCDd.pid
+}
+
+rc_stop() {
+        /usr/bin/killall lcdproc
+        #rm /var/run/LCDd.pid
+        sleep 1
+
+}
+
+rc_restart() {
+		rc_stop
+		rc_start "$1"
+}
+
+case $1 in
+    start)
+     rc_start "$2"
+    ;;
+    stop)
+        rc_stop
+        ;;
+    restart)
+        rc_restart "$2"
+        ;;
+    esac
+

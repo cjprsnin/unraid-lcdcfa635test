@@ -56,7 +56,7 @@ $cfg = parse_plugin_cfg($sName);
 
 <script type="text/javascript">
 
-	showStatus('pid','usbipd');
+	showStatus('pid','LCDd');
   
 </script>
 
@@ -66,6 +66,8 @@ $cfg = parse_plugin_cfg($sName);
 <span style="float:right;margin-right:10px"><a href="http://apcupsd.org/manual/manual.html" target="_blank" title="_(APC UPS Daemon user manual)_"><i class="fa fa-file-text-o"></i> <u>_(Online Manual)_</u></a></span>
 <form markdown="1" name="lcd_managerset" method="POST" action="/update.php" target="progressFrame">
 <input type="hidden" name="#file" value="<?=$sName?>/<?=$sName?>.cfg">
+<input type="hidden" name="#command" value="/usr/local/emhttp/plugins/lcd_manager/scripts/rc.lcd_manager">
+<input type="hidden" name="#arg[1]" value="check_config">
 <input type="hidden" name="HOST" value="127.0.0.1">
 <input type="hidden" name="PORT" value="13666">
 <input type="hidden" name="SIZE" value="20x2">
@@ -94,9 +96,38 @@ _(LCD Type(Driver))_:
   <?=mk_option($cfg["DRIVER"], "icp_a106", "ICP A106(QNAP)");?>
   </select>
 
+
 _(LCD Device Path)_:
 : <input type="text" name="DEV" value="<?=$cfg["DEV"];?>"/>
+
+_(Run lcdproc)_:
+ : <select name="LCDPROC" size="1" >
+  <?=mk_option($cfg["LCDPROC"], "no", "_(No)_");?>
+  <?=mk_option($cfg["LCDPROC"], "yes", "_(Yes)_");?>
+  </select> 
  
+_(Run lcdproc options)_:
+: <input type="text" name="LCDPROCOPTS" value="<?=$cfg["LCDPROCOPTS"];?>"/>
+
+:lm_settings_symlinks_plug:
+> Set lcdproc options.<br>
+    C CPU               detailed CPU usage<br>
+    P SMP-CPU           CPU usage overview (one line per CPU)<br>
+    G CPUGraph          CPU usage histogram<br>
+    L Load              load histogram<br>
+    M Memory            memory & swap usage<br>
+    S ProcSize          biggest processes size<br>
+    D Disk              filling level of mounted file systems<br>
+    I Iface             network interface usage<br>
+    B Battery           battery status<br>
+    T TimeDate          time & date information<br>
+    O OldTime           old time screen<br>
+    U Uptime            uptime screen<br>
+    K BigClock          big clock<br>
+    N MiniClock         minimal clock<br>
+    A About             credits page<br>
+:end
+
 
 
 &nbsp;
