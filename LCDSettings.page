@@ -70,7 +70,7 @@ $cfg = parse_plugin_cfg($sName);
 <input type="hidden" name="#arg[1]" value="check_config">
 <input type="hidden" name="HOST" value="127.0.0.1">
 <input type="hidden" name="PORT" value="13666">
-<input type="hidden" name="SIZE" value="20x2">
+
 <input type="hidden" name="DASH" value="0">
 
 
@@ -96,6 +96,11 @@ _(LCD Type(Driver))_:
   <?=mk_option($cfg["DRIVER"], "icp_a106", "ICP A106(QNAP)");?>
   </select>
 
+_(LCD Screen dimensions)_:
+: <select name="SIZE" size="1" >
+  <?=mk_option($cfg["SIZE"], "20x2", "20x2");?>
+  <?=mk_option($cfg["SIZE"], "16x2", "16x2");?>
+  </select>
 
 _(LCD Device Path)_:
 : <input type="text" name="DEV" value="<?=$cfg["DEV"];?>"/>

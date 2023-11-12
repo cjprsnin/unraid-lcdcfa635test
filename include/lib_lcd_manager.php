@@ -120,14 +120,16 @@ function sync_package_lcdproc() {
 	$lcdproc_screens_config = $config['installedpackages']['lcdprocscreens']['config'][0];
 	$lcdproc_config['driver'] = $cfg["DRIVER"];
 	$lcdproc_config['size'] = $cfg["SIZE"] ;
+	$ip=$cfg["HOST"] ;
+	$port=$cfg["PORT"] ;
 	$realport = $cfg["DEV"] ;
 
 
 		$config_text = "[server]\n";
 		$config_text .= "Driver={$lcdproc_config['driver']}\n";
-		$config_text .= "Bind=127.0.0.1\n";
-		$config_text .= "Port=13666\n";
-		$config_text .= "ReportLevel=3\n";
+		$config_text .= "Bind=$ip\n";
+		$config_text .= "Port=$port\n";
+		$config_text .= "ReportLevel=2\n";
 		$config_text .= "ReportToSyslog=yes\n";
 		$config_text .= "WaitTime=5\n";
 		$config_text .= "User=nobody\n";
@@ -135,7 +137,9 @@ function sync_package_lcdproc() {
 		$config_text .= "Foreground=no\n";
 		$config_text .= "DriverPath=/lib/lcdproc/\n";
 		$config_text .= "GoodBye=\"Thanks for using\"\n";
-		$config_text .= "GoodBye=\"    {$g['product_name']}     \"\n";
+		$config_text .= "GoodBye=\"unRAID          \"\n";
+		$config_text .= "Heartbeat=open\n";
+		$config_text .= "Backlight=open\n";
 		/* FIXME: Specific to the pyramid project */
 		$config_text .= "ToggleRotateKey=Enter\n";
 		$config_text .= "PrevScreenKey=Left\n";
@@ -215,7 +219,7 @@ function sync_package_lcdproc() {
 				$config_text .= "[{$lcdproc_config['driver']}]\n";
 				$config_text .= "Device={$realport}\n";
 				$config_text .= "Model=635\n";
-				#$config_text .= "Size={$lcdproc_config['size']}\n";
+				$config_text .= "Size={$lcdproc_config['size']}\n";
 				$config_text .= "Contrast=350\n";
 				$config_text .= "Brightness=1000\n";
 				$config_text .= "OffBrightness=50\n";
@@ -251,12 +255,14 @@ function sync_package_lcdproc() {
 				$config_text .= "Device={$realport}\n";
 				$config_text .= "OffBrightness=0\n";
 				$config_text .= "Brightness=500\n";
+				$config_text .= "Size={$lcdproc_config['size']}\n";
 				break;
 			case "icp_a106":
 				$config_text .= "[{$lcdproc_config['driver']}]\n";
 				$config_text .= "Device={$realport}\n";
 				$config_text .= "OffBrightness=0\n";
 				$config_text .= "Brightness=500\n";
+				$config_text .= "Size={$lcdproc_config['size']}\n";
 				break;
 			default:
 				lcdproc_warn("The chosen lcdproc driver is not a valid choice");

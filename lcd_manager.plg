@@ -3,14 +3,14 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name      "lcd_manager">
 <!ENTITY author    "SimonFair">
-<!ENTITY version   "2023.04.08">
+<!ENTITY version   "2023.11.07">
 <!ENTITY launch    "LCDSettings">
 <!ENTITY gitURL    "https://raw.githubusercontent.com/SimonFair/unraid-lcd/master">
 <!ENTITY pluginURL "&gitURL;/lcd_manager.plg">
 <!ENTITY supportURL	"https://forums.unraid.net/topic/136952-plugin-lcd_manager/">
 <!ENTITY packages	"/boot/config/plugins/&name;/packages">
 <!ENTITY plgPATH   "/boot/config/plugins/&name;">
-<!ENTITY md5		"b44d7af7216f424761ccd58ca6a8a442">
+<!ENTITY md5		"378b58dc0cd045399ba0b02b548e67d5">
 ]>
 
 <PLUGIN name="&name;"
@@ -25,6 +25,10 @@
 <CHANGES>
 ##LCD_Manager
 ###&version;
+  
+  - Add screen size option to settings.
+
+###2023.04.08
 
   - Initial Package.
 
