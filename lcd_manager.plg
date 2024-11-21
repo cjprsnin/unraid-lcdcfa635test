@@ -25,6 +25,10 @@
 <CHANGES>
 ##LCD_Manager
 ###&version;
+
+  - Update lcdproc package to include additional drivers.
+
+###2023.11.07
   
   - Add screen size option to settings.
 
@@ -44,7 +48,7 @@ dependency files
 The 'lcdproc-package' file.
 -->
 <FILE Name="&packages;/lcdproc.txz" Min="6.10" Run="upgradepkg --install-new">
-<URL>&gitURL;/lcdproc.txz</URL>
+<URL>&gitURL;/lcdproc.20241121.tgz</URL>
 </FILE>
 
 <!--
