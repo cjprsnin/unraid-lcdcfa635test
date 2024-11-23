@@ -94,7 +94,7 @@ The 'post-updgrade' script.
 echo "Removing previous versons now upgrade has completed."
 echo
 # Remove old 'bundle' files.
-rm -f $(ls &packages;/*.txz 2>/dev/null | grep -v '&version;')
+rm -f $(ls &packages;/&name;*.txz 2>/dev/null | grep -v '&version;')
 </INLINE>
 </FILE>
 
