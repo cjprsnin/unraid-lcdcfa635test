@@ -26,6 +26,10 @@
 ##LCD_Manager
 ###&version;
 
+  - Add libhid and option for mdm166a on the drop down.
+
+###2024.11.21
+
   - Update lcdproc package to include additional drivers.
 
 ###2023.11.07
@@ -43,14 +47,6 @@
 <!--
 dependency files
 -->
-
-<!--
-The 'lcdproc-package' file.
--->
-<FILE Name="&packages;/lcdproc.txz" Min="6.10" Run="upgradepkg --install-new">
-<URL>&gitURL;/lcdproc.20241121.tgz</URL>
-</FILE>
-
 <!--
 The 'pre-install' script.
 -->
@@ -66,6 +62,21 @@ fi
 
 </INLINE>
 </FILE>
+
+<!--
+The 'lcdproc-package' file.
+-->
+<FILE Name="&packages;/lcdproc.txz" Min="6.10" Run="upgradepkg --install-new">
+<URL>&gitURL;/lcdproc.20241121.tgz</URL>
+</FILE>
+
+<!--
+The 'libhid-package' file.
+-->
+<FILE Name="&packages;/libhid-0.2.16-x86_64-2_slack.txz"  Min="6.10" Run="upgradepkg --install-new">
+<URL>&gitURL;libhid-0.2.16-x86_64-2_slack.txz</URL>
+</FILE>
+
 
 <!--
 Get the plugin bundle.
