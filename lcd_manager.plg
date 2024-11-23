@@ -66,14 +66,14 @@ fi
 <!--
 The 'lcdproc-package' file.
 -->
-<FILE Name="&packages;/lcdproc.txz" Min="6.10" Run="upgradepkg --install-new">
+<FILE Name="&packages;/lcdproc.txz" Run="upgradepkg --install-new ">
 <URL>&gitURL;/lcdproc.20241121.tgz</URL>
 </FILE>
 
 <!--
 The 'libhid-package' file.
 -->
-<FILE Name="&packages;/libhid-0.2.16-x86_64-2_slack.txz"  Min="6.10" Run="upgradepkg --install-new">
+<FILE Name="&packages;/libhid-0.2.16-x86_64-2_slack.txz" Run="upgradepkg --install-new ">
 <URL>&gitURL;/libhid-0.2.16-x86_64-2_slack.txz</URL>
 </FILE>
 
