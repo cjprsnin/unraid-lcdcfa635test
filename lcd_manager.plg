@@ -3,14 +3,14 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name      "lcd_manager">
 <!ENTITY author    "SimonFair">
-<!ENTITY version   "2024.11.21">
+<!ENTITY version   "2024.11.23">
 <!ENTITY launch    "LCDSettings">
 <!ENTITY gitURL    "https://raw.githubusercontent.com/SimonFair/unraid-lcd/master">
 <!ENTITY pluginURL "&gitURL;/lcd_manager.plg">
 <!ENTITY supportURL	"https://forums.unraid.net/topic/136952-plugin-lcd_manager/">
 <!ENTITY packages	"/boot/config/plugins/&name;/packages">
 <!ENTITY plgPATH   "/boot/config/plugins/&name;">
-<!ENTITY md5		"06e10c0bbe4206f7cb55efdb806b4263">
+<!ENTITY md5		"8e25bfb8ee58a28c56d12a14908857c2">
 ]>
 
 <PLUGIN name="&name;"
