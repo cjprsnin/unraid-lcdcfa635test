@@ -3,14 +3,14 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name      "lcd_manager">
 <!ENTITY author    "wabamad">
-<!ENTITY version   "2025.01.17">
+<!ENTITY version   "2025.01.18">
 <!ENTITY launch    "LCDSettings">
 <!ENTITY gitURL    "https://raw.githubusercontent.com/wabamad/unraid-lcdcfa635test/master">
 <!ENTITY pluginURL "&gitURL;/lcd_manager.plg">
 <!ENTITY supportURL	"https://forums.unraid.net/topic/136952-plugin-lcd_manager/">
 <!ENTITY packages	"/boot/config/plugins/&name;/packages">
 <!ENTITY plgPATH   "/boot/config/plugins/&name;">
-<!ENTITY md5		"564eb7bc89bae7a3f627013d76d19ca9">
+<!ENTITY md5		"8ca0b6aed249fae45f4efada8adac81d">
 ]>
 
 <PLUGIN name="&name;"
@@ -71,7 +71,7 @@ fi
 The 'lcdproc-package' file.
 -->
 <FILE Name="&packages;/lcdproc.20241124.tgz" Run="upgradepkg --install-new ">
-<URL>&gitURL;/lcdproc.20241121.tgz</URL>
+<URL>&gitURL;/lcdproc.20241124.tgz</URL>
 </FILE>
 
 <!--
