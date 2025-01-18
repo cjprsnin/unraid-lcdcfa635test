@@ -105,11 +105,9 @@ _(LCD Screen dimensions)_:
   </select>
 
 _(LCD Screen brightness)_:
-: <select name="BRIGHTNESS" size="1" >
 : <input type="text" name="BRIGHTNESS" value="<?=$cfg["BRIGHTNESS"];?>"/>
 
 _(LCD Screen contrast)_:
-: <select name="CONTRAST" size="1" >
 : <input type="text" name="CONTRAST" value="<?=$cfg["CONTRAST"];?>"/>
 
 _(LCD Device Path)_:
