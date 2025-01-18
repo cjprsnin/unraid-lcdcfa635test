@@ -120,6 +120,8 @@ function sync_package_lcdproc() {
 	$lcdproc_screens_config = $config['installedpackages']['lcdprocscreens']['config'][0];
 	$lcdproc_config['driver'] = $cfg["DRIVER"];
 	$lcdproc_config['size'] = $cfg["SIZE"] ;
+	$lcdproc_config['brightness'] = $cfg["BRIGHTNESS"] ;
+	$lcdproc_config['contrast'] = $cfg["CONTRAST"] ;
 	$ip=$cfg["HOST"] ;
 	$port=$cfg["PORT"] ;
 	$realport = $cfg["DEV"] ;
@@ -151,7 +153,7 @@ function sync_package_lcdproc() {
 		$config_text .= "MenuKey=Escape\n";
 		$config_text .= "EnterKey=Enter\n";
 		$config_text .= "UpKey=Up\n";
-		$config_text .= "DownKey=Down\n";
+		$config_text .= "DownKey=Down\n"; 
 
 		/* lcdproc default driver definitions */
 		switch ($lcdproc_config['driver']) {
@@ -220,8 +222,8 @@ function sync_package_lcdproc() {
 				$config_text .= "Device={$realport}\n";
 				$config_text .= "Model=635\n";
 				$config_text .= "Size={$lcdproc_config['size']}\n";
-				$config_text .= "Contrast=350\n";
-				$config_text .= "Brightness=1000\n";
+				$config_text .= "Contrast={$lcdproc_config['contrast']}\n";
+				$config_text .= "Brightness={$lcdproc_config['brightness']}\n";
 				$config_text .= "OffBrightness=50\n";
 				$config_text .= "Speed=115200\n";
 				$config_text .= "NewFirmware=yes\n";

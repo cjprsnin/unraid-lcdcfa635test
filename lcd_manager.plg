@@ -2,15 +2,15 @@
 
 <!DOCTYPE PLUGIN [
 <!ENTITY name      "lcd_manager">
-<!ENTITY author    "SimonFair">
-<!ENTITY version   "2024.11.23">
+<!ENTITY author    "wabamad">
+<!ENTITY version   "2025.01.17">
 <!ENTITY launch    "LCDSettings">
-<!ENTITY gitURL    "https://raw.githubusercontent.com/SimonFair/unraid-lcd/master">
+<!ENTITY gitURL    "https://raw.githubusercontent.com/wabamad/unraid-lcdcfa635test/master">
 <!ENTITY pluginURL "&gitURL;/lcd_manager.plg">
 <!ENTITY supportURL	"https://forums.unraid.net/topic/136952-plugin-lcd_manager/">
 <!ENTITY packages	"/boot/config/plugins/&name;/packages">
 <!ENTITY plgPATH   "/boot/config/plugins/&name;">
-<!ENTITY md5		"fc9c1404069bbbf1f41526d518e511e7">
+<!ENTITY md5		"564eb7bc89bae7a3f627013d76d19ca9">
 ]>
 
 <PLUGIN name="&name;"
@@ -25,6 +25,10 @@
 <CHANGES>
 ##LCD_Manager
 ###&version;
+
+  - Made some changes to allow for setting up CFA-635 and proper handling my network setup
+  
+###2024.11.23
 
   - Add libhid and option for mdm166a on the drop down.
 
