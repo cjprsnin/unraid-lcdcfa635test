@@ -70,7 +70,7 @@ fi
 <!--
 The 'lcdproc-package' file.
 -->
-<FILE Name="&packages;/lcdproc-20241124.tgz" Run="upgradepkg --install-new ">
+<FILE Name="&packages;/lcdproc-20250210.tgz" Run="upgradepkg --install-new ">
 <URL>&gitURL;/lcdproc-20241124.tgz</URL>
 </FILE>
 
