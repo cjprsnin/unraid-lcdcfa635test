@@ -95,6 +95,7 @@ _(LCD Type(Driver))_:
   <?=mk_option($cfg["DRIVER"], "CFontzPacket", "CFontzPacket");?>
   <?=mk_option($cfg["DRIVER"], "icp_a106", "ICP A106(QNAP)");?>
   <?=mk_option($cfg["DRIVER"], "mdm166a", "Futaba (mdm166a)");?>
+  <?=mk_option($cfg["DRIVER"], "lis", "lis");?>
   </select>
 
 _(LCD Screen dimensions)_:
