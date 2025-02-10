@@ -266,6 +266,13 @@ function sync_package_lcdproc() {
 				$config_text .= "Brightness=500\n";
 				$config_text .= "Size={$lcdproc_config['size']}\n";
 				break;
+			case "lis":
+				$config_text .= "[{$lcdproc_config['driver']}]\n";
+				$config_text .= "Device={$realport}\n";
+				$config_text .= "OffBrightness=0\n";
+				$config_text .= "Brightness=500\n";
+				$config_text .= "Size={$lcdproc_config['size']}\n";
+				break;
 			default:
 				lcdproc_warn("The chosen lcdproc driver is not a valid choice");
 				unset($lcdproc_config['driver']);
