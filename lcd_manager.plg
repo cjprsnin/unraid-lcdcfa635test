@@ -10,7 +10,7 @@
 <!ENTITY supportURL	"https://forums.unraid.net/topic/136952-plugin-lcd_manager/">
 <!ENTITY packages	"/boot/config/plugins/&name;/packages">
 <!ENTITY plgPATH   "/boot/config/plugins/&name;">
-<!ENTITY md5		"fbc49555aa7bd1939cd05b5bf8f12043">
+<!ENTITY md5		"0661571fe9a7df2c45b888b60c80489a">
 ]>
 
 <PLUGIN name="&name;"
