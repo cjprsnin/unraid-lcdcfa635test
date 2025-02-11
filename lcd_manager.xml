@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Containers>
 <Plugin>True</Plugin>
-<PluginURL>https://raw.githubusercontent.com/cjprsnin/unraid-lcdcfa635test/refs/heads/master/lcd_manager.plg/PluginURL>
+<PluginURL>https://raw.githubusercontent.com/cjprsnin/unraid-lcdcfa635test/refs/heads/master/lcd_manager.plg</PluginURL>
 <PluginAuthor>SimonFair</PluginAuthor>
 <Beta>True</Beta>
 <Category>Other: Drivers:</Category>
