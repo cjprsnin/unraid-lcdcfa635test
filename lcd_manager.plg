@@ -10,7 +10,7 @@
 <!ENTITY supportURL	"https://forums.unraid.net/topic/136952-plugin-lcd_manager/">
 <!ENTITY packages	"/boot/config/plugins/&name;/packages">
 <!ENTITY plgPATH   "/boot/config/plugins/&name;">
-<!ENTITY md5		"8ca0b6aed249fae45f4efada8adac81d">
+<!ENTITY md5		"ae5e961930aab1ed9658c13f3d5579ad">
 ]>
 
 <PLUGIN name="&name;"
@@ -25,7 +25,9 @@
 <CHANGES>
 ##LCD_Manager
 ###&version;
+  - added lis driver
 
+###2024.11.23
   - Made some changes to allow for setting up CFA-635 and proper handling my network setup
   
 ###2024.11.23
