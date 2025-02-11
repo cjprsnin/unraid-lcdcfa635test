@@ -3,7 +3,7 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name      "lcd_manager">
 <!ENTITY author    "cjprsnin">
-<!ENTITY version   "2025.01.18">
+<!ENTITY version   "2025.02.10">
 <!ENTITY launch    "LCDSettings">
 <!ENTITY gitURL    "https://raw.githubusercontent.com/cjprsnin/unraid-lcdcfa635test/refs/heads/master/">
 <!ENTITY pluginURL "&gitURL;/lcd_manager.plg">
