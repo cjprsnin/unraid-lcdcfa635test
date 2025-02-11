@@ -87,8 +87,8 @@ The 'libhid-package' file.
 <!--
 Get the plugin bundle.
 -->
-<FILE Name="&packages;/&name;-&version;.txz" Run="upgradepkg --install-new &packages;/&name;*%&packages;/&name;-&version;.txz">
-<URL>"&gitURL;/&name;-&version;.txz"</URL>
+<FILE Name="&packages;/&name;-&version;.txz" Run="upgradepkg --install-new &packages;/&name;*%&packages;/&name;-&version;.tar.gz">
+<URL>"&gitURL;/&name;-&version;.tar.gz"</URL>
 <MD5>&md5;</MD5>
 </FILE>
 
@@ -186,7 +186,7 @@ rm -f /tmp/plugins/&name;.plg
 rm -r /tmp/&name;
 
 # Remove all plugin files from emhttp.
-removepkg &packages;/&name;-&version;.txz 
+removepkg &packages;/&name;-&version;.tar.gz 
 #removepkg "&packages;/&name;/packages/${KERNEL_V%%-*}/${PACKAGE}-1.txz"
 #depmod -a > /dev/null
 
