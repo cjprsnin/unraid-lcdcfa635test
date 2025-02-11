@@ -87,7 +87,7 @@ The 'libhid-package' file.
 <!--
 Get the plugin bundle.
 -->
-<FILE Name="&packages;/&name;-&version;.txz" Run="upgradepkg --install-new &packages;/&name;*%&packages;/&name;-&version;.tar.gz">
+<FILE Name="&packages;/&name;-&version;.tar.gz" Run="upgradepkg --install-new &packages;/&name;*%&packages;/&name;-&version;.tar.gz">
 <URL>"&gitURL;/&name;-&version;.tar.gz"</URL>
 <MD5>&md5;</MD5>
 </FILE>
